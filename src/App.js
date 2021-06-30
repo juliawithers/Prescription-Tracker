@@ -1,13 +1,14 @@
-// import logo from './logo.svg';
-import './App.css';
 import React, { Component } from 'react';
+// import { Route, Link, NavLink, withRouter } from 'react-router-dom';
 import context from './context';
 // import config from './config';
 import STORE from './STORE';
-import Login from './Login/Login.js';
-import List from './List/List.js';
+import Login from './Login/Login';  
+import List from './List/List';
+import Hamburger from './pictures/hamburger.png';
+import xOut from './pictures/x_out.png';
 
-export default class App extends Component{
+export default class App extends Component {
   
   //need to set up this state based off of STORE.js
   static contextType = context;
@@ -15,21 +16,24 @@ export default class App extends Component{
     super(props);
     this.state = {
       user_id: '',
-      prescriptions: []
+      prescriptions: [],
+      handleLoginSubmit: () => {},
+      menu: '',
+      click: false
     }
   }
 
-  handleLoginSubmit = (username, password){
-    const object = {
-      username: username,
-      password: password
-    };
-    for (i=0; STORE.users.length; i++) {
-      if (username == STORE.users[i].username && password == STORE.users[i].password) {
-        const user_id = STORE.users[i].user_id;
+  handleLoginSubmit = (username, password)=>{
+    // const object = {
+    //   username: username,
+    //   password: password
+    // };
+    for (let i=0; STORE.users.length; i++) {
+      if (username === STORE.users[i].username && password === STORE.users[i].password) {
+        
         this.setState({
           user_id: STORE.users[i].user_id,
-          prescriptions: STORE.prescriptions[user_id].prescripts
+          prescriptions: STORE.prescriptions[i].prescripts
         });
       }
     }
@@ -39,20 +43,67 @@ export default class App extends Component{
     
   // }
 
-  createLanding(){
-    if (this.state.user_id == ''){
+  createLanding=()=>{
+    if (this.state.user_id === ''){
       return (
         <Login />
       )
     }
   }
 
-  createMainRoutes(){
-    if (this.state.user_id != ''){
+  createMainRoutes=()=>{
+    if (this.state.user_id !== ''){
       return (
         <List />
       )
     }
+  }
+
+  menuClick=()=>{
+    this.setState({
+      menu: 'hide',
+      icon: Hamburger
+    })
+  }
+ 
+  hamburgerClick = () => {
+    if (this.state.click === true) {
+      return (
+        <span className="ham">
+          <img id="hamburger" src={this.state.icon} onClick={this.handleHamClick} alt="Hamburger Menu for Smaller Screensize" />
+        </span>
+      )
+    } else {
+      return <div></div>
+    }
+  }
+
+  handleHamClick = () => {
+    if (this.state.menu === 'hide') {
+      this.setState({
+        menu: 'show',
+        icon: xOut
+      })
+    } else if (this.state.menu === 'show') {
+      this.setState({
+        menu: 'hide',
+        icon: Hamburger
+      })
+    }
+  }
+
+  handleClick = () => {
+    this.setState({
+      click: true
+    })
+  }
+
+  createNavRoutes=()=>{
+    return(
+      <div className="navigation">
+        <button>Logout</button>
+      </div>
+    )
   }
   
   render(){
@@ -95,4 +146,4 @@ export default class App extends Component{
   }
 }
 
-export default withRouter(App)
+// export default withRouter(App)

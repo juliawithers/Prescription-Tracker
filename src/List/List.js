@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
+import context from '../context';
 
 export default class List extends Component {
 
     // validation code here
     static contextType = context;
 
-    state = {
-    //   
-    };
+    // state = {
+    // //   
+    // };
 
     handleChangeInput = e => {
         // const value = e.target.value;
@@ -55,11 +56,11 @@ export default class List extends Component {
 
     createListItems = (prescriptions) => {
         return prescriptions.map((item, i) =>{
-            const { id, prescription_name, quantity, doctor, date_prescribed, date_to_refill, date_to_renew } = lineItem;
+            const { id, prescription_name, quantity, doctor, date_prescribed, date_to_refill, date_to_renew } = item;
 
-            datePrescribed = createDate(date_prescribed);
-            dateRefill = createDate(date_to_refill);
-            dateRenew = createDate(date_to_renew);
+            let datePrescribed = this.createDate(date_prescribed);
+            let dateRefill = this.createDate(date_to_refill);
+            let dateRenew = this.createDate(date_to_renew);
 
             return (
                 <li>
