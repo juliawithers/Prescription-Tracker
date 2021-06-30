@@ -1,7 +1,7 @@
 import React from 'react'
 
 const context = React.createContext({
-  user_id: [],
+  user_id: '',
   prescriptions: [],
   handleLoginSubmit: ()=>{}
 })

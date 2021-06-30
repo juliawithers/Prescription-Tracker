@@ -1,71 +1,100 @@
 import React, { Component } from 'react';
-// import { Route, Link, NavLink, withRouter } from 'react-router-dom';
+import { Route, Link, NavLink, withRouter } from 'react-router-dom';
 import context from './context';
 // import config from './config';
 import STORE from './STORE';
-import Login from './Login/Login';  
+import Login from './Login/Login';
 import List from './List/List';
+import AddEdit from './AddEdit/AddEdit';
+import PrescriptionDetails from './PrescriptionDetails/PrescriptionDetails';
 import Hamburger from './pictures/hamburger.png';
 import xOut from './pictures/x_out.png';
+import './App.css';
+
 
 export default class App extends Component {
-  
-  //need to set up this state based off of STORE.js
+
   static contextType = context;
   constructor(props) {
     super(props);
     this.state = {
       user_id: '',
-      prescriptions: [],
-      handleLoginSubmit: () => {},
+      prescriptions: [], 
+      handleLoginSubmit: () => { },
       menu: '',
-      click: false
+      click: false,
+      login: false
     }
   }
 
-  handleLoginSubmit = (username, password)=>{
-    // const object = {
-    //   username: username,
-    //   password: password
-    // };
-    for (let i=0; STORE.users.length; i++) {
-      if (username === STORE.users[i].username && password === STORE.users[i].password) {
-        
+  handleLoginSubmit = (username, password) =>{
+    let length = STORE.users.length - 1;
+    for (let i=0; length; i++){
+      let user = STORE.users[i];
+      if (username === user.username && password === user.passw) {
         this.setState({
-          user_id: STORE.users[i].user_id,
-          prescriptions: STORE.prescriptions[i].prescripts
+          user_id: user.user_id,
+          prescriptions: this.getUserScripts(user.user_id),
+          login: true
         });
+        return
       }
     }
   }
 
-  // componentDidMount() {
-    
-  // }
+  getUserScripts=(userID)=>{
+    let elements = STORE.prescriptions;
+    for (let i=0; elements.length-1; i++){
+      if (elements[i].user_id === userID) {
+        return elements[i].prescripts;
+      } else {
+        return 'no prescriptions listed';
+      }
+    }
+  }
 
-  createLanding=()=>{
-    if (this.state.user_id === ''){
+  createLanding = () => {
+    console.log('createLanding ran');
+    if (this.state.login == false){
       return (
         <Login />
       )
-    }
-  }
-
-  createMainRoutes=()=>{
-    if (this.state.user_id !== ''){
+    } else if (this.state.login == true){
       return (
-        <List />
+        <List/>
       )
     }
   }
 
-  menuClick=()=>{
+  createMainRoutes() {
+    return (
+      <>
+        <Route
+          exact
+          path="/PrescriptionList"
+          component={List}
+        />
+        <Route
+          exact
+          path="/PrescriptionEdit"
+          component={AddEdit}
+        />
+        <Route
+          exact
+          path="/PrescriptionDetails"
+          component={PrescriptionDetails}
+        /> 
+      </>
+    )
+  }
+
+  menuClick = () => {
     this.setState({
       menu: 'hide',
       icon: Hamburger
     })
   }
- 
+
   hamburgerClick = () => {
     if (this.state.click === true) {
       return (
@@ -98,20 +127,22 @@ export default class App extends Component {
     })
   }
 
-  createNavRoutes=()=>{
-    return(
+  createNavRoutes = () => {
+    return (
       <div className="navigation">
         <button>Logout</button>
       </div>
     )
   }
-  
-  render(){
+
+  render() {
+    console.log(this.state);
 
     const contextValue = {
       user_id: this.state.user_id,
       prescriptions: this.state.prescriptions,
-      handleLoginSubmit: this.handleLoginSubmit
+      handleLoginSubmit: this.handleLoginSubmit,
+      login: this.state.login
     };
 
     let menu = this.state.menu === 'hide'
@@ -119,20 +150,20 @@ export default class App extends Component {
       : <div className="menu">
         {this.createNavRoutes()}
       </div>
-    let bigMenu = this.state.click === true 
+    let bigMenu = this.state.click === true
       ? <div className="big-screen">
-          {this.createNavRoutes()}
-        </div>
+        {this.createNavRoutes()}
+      </div>
       : <div></div>
 
     return (
       <context.Provider value={contextValue}>
         <div className="app">
-          <header><h1>Stock'Em!</h1></header>
+          <header><h1>Prescription Tracker</h1></header>
           <nav role="navigation">
             <div className="small-screen">
               {this.hamburgerClick()}
-              {menu}  
+              {menu}
             </div>
             {bigMenu}
           </nav>
@@ -145,5 +176,3 @@ export default class App extends Component {
     )
   }
 }
-
-// export default withRouter(App)

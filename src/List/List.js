@@ -63,7 +63,7 @@ export default class List extends Component {
             let dateRenew = this.createDate(date_to_renew);
 
             return (
-                <li>
+                <li key={i}>
                     <p>Item: {id}</p>
                     <p>Prescription Name: {prescription_name}</p>
                     <p>Quantity per Prescription: {quantity}</p>
@@ -78,6 +78,7 @@ export default class List extends Component {
     }
 
     render() {
+        console.log(this.context.prescriptions);
         return (
             <div className="component-div">
                 <h2>Current Prescription List</h2>
@@ -85,13 +86,6 @@ export default class List extends Component {
                     {this.createListItems(this.context.prescriptions)}
                 </ul>
                 <br />
-                <form onSubmit={this.handleSubmit}>
-                    <div>
-                        <label htmlFor="login-password">Password: </label>
-                        <input className="login-password" type="password" name='login-password' id='login-password' />
-                    </div>
-                    <button type='submit'>Login</button>
-                </form>
             </div>
         )
     }
