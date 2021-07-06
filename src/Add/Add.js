@@ -84,6 +84,7 @@ export default class Add extends Component {
     render() {
         return (
             <div>
+                <h2>Add Prescription</h2>
                 <button onClick={this.handleBack}>Back</button>
                 <form onSubmit={this.handleSubmitPrescription}>
                     <label htmlFor="prescription-name">Prescription Name:</label>

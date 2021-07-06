@@ -15,59 +15,26 @@ export default class List extends Component {
         };
     }
 
-    handleEdit = () => {
-        console.log('handleEdit ran');
-        if (this.state.editClick === true) {
-            return (
-                <Edit />
-            )
-        } else if(this.state.editClick === false) {
-            return <div></div>
-        }
-    }
-
-    handleEditClick = e => {
-        console.log('handleEditClick ran');
-        this.handleEdit();
+    componentDidMount () {
         this.setState({
-            editClick: true
-        });
-    }
-
-    handleAdd = () => {
-        console.log('handleAdd ran');
-        console.log(this.state.addClick);
-        if (this.state.addClick === true){
-            console.log('handleAdd if ran');
-            return (
-                <Add />
-            )    
-        } else if (this.state.addClick === false){
-            console.log('handleAdd else if ran');
-            return <div></div>
-        }
-    }
-
-    handleAddClick = () => {
-        console.log('handleAddClick ran');
-        this.handleAdd();
-        this.setState({
-            addClick: true
-        });
+            addClick: this.context.addClick,
+            editClick: this.context.editClick
+        })
     }
 
     isBackClick = () => {
         if (this.context.backClick === true) {
             this.context.handleRemoveBackClick();
         }
-        this.setState({
-            addClick: false,
-            editClick: false
-        })
-
-        this.callToFunctions();
     }
 
+    handleAdd = () => {
+        this.context.handleAddClick();
+    }
+
+    handleEdit = () => {
+        this.context.handleEditClick();
+    }
     // NEED TO DO: 
     // handle count downs by date based off of QTY of pills or whatever, 
     // edit buttons for prescription details,
@@ -95,6 +62,8 @@ export default class List extends Component {
     createListItems = (prescriptions) => {
         console.log('createListItems ran');
         console.log(prescriptions);
+        console.log(this.state);
+        console.log(this.context.addClick);
         return prescriptions.map((item, i) => {
             const { id, prescription_name, quantity, doctor, date_prescribed, date_to_refill, date_to_renew } = item;
 
@@ -111,7 +80,7 @@ export default class List extends Component {
                     <p>Prescribed on: {datePrescribed}</p>
                     <p>Date to Refill: {dateRefill}</p>
                     <p>Date to Renew: {dateRenew}</p>
-                    <button className="edit-button" onClick={this.handleEditClick}>Edit</button>
+                    <button className="edit-button" onClick={this.handleEdit}>Edit</button>
                 </li>
             )
         })
@@ -127,27 +96,30 @@ export default class List extends Component {
             console.log('renderList else ran');
             return (
                 <div>
+                    <h2>Current Prescription List</h2>
                     <ul>
                         {this.createListItems(this.context.prescriptions)}
                     </ul>
-                    <button className="Add-button" onClick={this.handleAddClick}>Add</button>
+                    <button className="Add-button" onClick={this.handleAdd}>Add</button>
                 </div>
             )
         }   
     }
 
-    callToFunctions = () => {
-        this.handleAdd();
-        this.handleEdit();
-    }
 
     render() {
         console.log(this.state);
         return (
             <div className="component-div">
-                <h2>Current Prescription List</h2>
-                {this.renderList()}
-                {this.callToFunctions()}
+                {this.context.addClick === false && this.context.editClick === false
+                ? this.renderList()
+                : <div></div>}
+                {this.context.addClick === true
+                ? <Add />
+                : <div></div>}
+                {this.context.editClick === true
+                ? <Edit />
+                : <div></div>}
             </div>
         )
     }

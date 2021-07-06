@@ -10,7 +10,9 @@ const context = React.createContext({
     handleLoginSubmit: () => { },
     handleBackClick: () => { },
     handleRemoveBackClick: () => {},
-    handleAddClick: ()=>{}
+    handleAddClick: ()=>{},
+    handleAddClick: ()=>{},
+    handleEditClick: ()=>{}
 })
 
 export default context

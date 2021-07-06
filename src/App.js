@@ -30,7 +30,9 @@ export default class App extends Component {
       handleLoginSubmit: () => { },
       handleBackClick: () => { },
       handleRemoveBackClick: () => { },
-      handleAddClick: ()=>{}
+      handleAddClick: ()=>{},
+      handleAddClick: ()=>{},
+      handleEditClick: ()=>{}
     }
   }
 
@@ -66,14 +68,10 @@ export default class App extends Component {
     }
   }
 
-  createLanding = (backClick) => {
+  createLanding = () => {
     console.log('createLanding ran');
-    if (backClick === true) {
+    if (this.state.backClick === true) {
       console.log('createLanding backClick if ran')
-      this.setState({
-        addClick: false,
-        editClick: false
-      })
       return (
         <List />
       )
@@ -164,13 +162,30 @@ export default class App extends Component {
     )
   }
 
+  handleEditClick = () => {
+    console.log('handleEditClick ran');
+    // this.handleEdit();
+    this.setState({
+        editClick: true
+    });
+  }
+
+  handleAddClick = () => {
+      console.log('handleAddClick ran');
+      this.setState({
+          addClick: true
+      });
+  }
+
   handleBackClick = (input) => {
     console.log('handleBackClick ran');
     console.log(context);
     this.setState({
-      backClick: input
+      backClick: input,
+      addClick: false,
+      editClick: false
     });
-    this.createLanding(input);
+    this.createLanding();
   }
 
   handleRemoveBackClick = () => {
@@ -194,7 +209,9 @@ export default class App extends Component {
       editClick: this.state.editClick,
       handleLoginSubmit: this.handleLoginSubmit,
       handleBackClick: this.handleBackClick,
-      handleRemoveBackClick: this.handleRemoveBackClick
+      handleRemoveBackClick: this.handleRemoveBackClick,
+      handleAddClick: this.handleAddClick,
+      handleEditClick: this.handleEditClick
     };
 
     let menu = this.state.menu === 'hide'
@@ -221,8 +238,10 @@ export default class App extends Component {
           </nav>
           <main>
             {/* {status} */}
-            {this.createLanding()}
             {this.createMainRoutes()}
+            {this.state.login === false
+            ? <Login />
+            : <List/>}
           </main>
         </div>
       </context.Provider>
