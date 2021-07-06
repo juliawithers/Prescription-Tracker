@@ -5,8 +5,9 @@ import context from './context';
 import STORE from './STORE';
 import Login from './Login/Login';
 import List from './List/List';
-import AddEdit from './AddEdit/AddEdit';
 import PrescriptionDetails from './PrescriptionDetails/PrescriptionDetails';
+import Add from './Add/Add';
+import Edit from './Edit/Edit';
 import Hamburger from './pictures/hamburger.png';
 import xOut from './pictures/x_out.png';
 import './App.css';
@@ -19,17 +20,29 @@ export default class App extends Component {
     super(props);
     this.state = {
       user_id: '',
-      prescriptions: [], 
-      handleLoginSubmit: () => { },
+      prescriptions: [],
       menu: '',
-      click: false,
-      login: false
+      click: '',
+      login: false,
+      backClick: '',
+      addClick: '',
+      editClick: '',
+      handleLoginSubmit: () => { },
+      handleBackClick: () => { },
+      handleRemoveBackClick: () => { },
+      handleAddClick: ()=>{}
     }
   }
 
-  handleLoginSubmit = (username, password) =>{
+  handleLoginSubmit = (username, password) => {
+    this.setState({
+      addClick: false,
+      editClick: false,
+      backClick: false
+    });
+
     let length = STORE.users.length - 1;
-    for (let i=0; length; i++){
+    for (let i = 0; length; i++) {
       let user = STORE.users[i];
       if (username === user.username && password === user.passw) {
         this.setState({
@@ -42,9 +55,9 @@ export default class App extends Component {
     }
   }
 
-  getUserScripts=(userID)=>{
+  getUserScripts = (userID) => {
     let elements = STORE.prescriptions;
-    for (let i=0; elements.length-1; i++){
+    for (let i = 0; elements.length - 1; i++) {
       if (elements[i].user_id === userID) {
         return elements[i].prescripts;
       } else {
@@ -53,15 +66,27 @@ export default class App extends Component {
     }
   }
 
-  createLanding = () => {
+  createLanding = (backClick) => {
     console.log('createLanding ran');
-    if (this.state.login == false){
+    if (backClick === true) {
+      console.log('createLanding backClick if ran')
+      this.setState({
+        addClick: false,
+        editClick: false
+      })
+      return (
+        <List />
+      )
+    }
+    if (this.state.login === false) {
+      console.log('createLanding if Login ran');
       return (
         <Login />
       )
-    } else if (this.state.login == true){
+    } else if (this.state.login === true) {
+      console.log('createLanding else if ran');
       return (
-        <List/>
+        <List />
       )
     }
   }
@@ -76,14 +101,18 @@ export default class App extends Component {
         />
         <Route
           exact
+          path="/PrescriptionAdd" component={Add}
+        />
+        <Route
+          exact
           path="/PrescriptionEdit"
-          component={AddEdit}
+          component={Edit}
         />
         <Route
           exact
           path="/PrescriptionDetails"
           component={PrescriptionDetails}
-        /> 
+        />
       </>
     )
   }
@@ -135,14 +164,37 @@ export default class App extends Component {
     )
   }
 
+  handleBackClick = (input) => {
+    console.log('handleBackClick ran');
+    console.log(context);
+    this.setState({
+      backClick: input
+    });
+    this.createLanding(input);
+  }
+
+  handleRemoveBackClick = () => {
+    this.setState({
+      backClick: false,
+      addClick: false,
+      editClick: false
+
+    });
+  }
+
   render() {
     console.log(this.state);
-
+    // let status = this.createLanding();
     const contextValue = {
       user_id: this.state.user_id,
       prescriptions: this.state.prescriptions,
+      login: this.state.login,
+      backClick: this.state.backClick,
+      addClick: this.state.addClick,
+      editClick: this.state.editClick,
       handleLoginSubmit: this.handleLoginSubmit,
-      login: this.state.login
+      handleBackClick: this.handleBackClick,
+      handleRemoveBackClick: this.handleRemoveBackClick
     };
 
     let menu = this.state.menu === 'hide'
@@ -168,6 +220,7 @@ export default class App extends Component {
             {bigMenu}
           </nav>
           <main>
+            {/* {status} */}
             {this.createLanding()}
             {this.createMainRoutes()}
           </main>

@@ -1,33 +1,71 @@
 import React, { Component } from 'react';
 import context from '../context';
+import Edit from '../Edit/Edit';
+import Add from '../Add/Add';
 
 export default class List extends Component {
 
     // validation code here
     static contextType = context;
-
-    // state = {
-    // //   
-    // };
-
-    handleChangeInput = e => {
-        // const value = e.target.value;
-        // const id = e.target.id;
-        // if (id === 'login-username') {
-        //     this.setState({
-        //         username: value
-        //     });
-        // }
-        // if (id === 'login-password') {
-        //     this.setState({
-        //         password: value
-        //     });
-        // }
+    constructor(props) {
+        super(props);
+        this.state = {
+            addClick: false,
+            editClick: false
+        };
     }
 
-    handleSubmit = e => {
-        // e.preventDefault();
-        // this.context.handleLoginSubmit(this.state.username, this.state.password);
+    handleEdit = () => {
+        console.log('handleEdit ran');
+        if (this.state.editClick === true) {
+            return (
+                <Edit />
+            )
+        } else if(this.state.editClick === false) {
+            return <div></div>
+        }
+    }
+
+    handleEditClick = e => {
+        console.log('handleEditClick ran');
+        this.handleEdit();
+        this.setState({
+            editClick: true
+        });
+    }
+
+    handleAdd = () => {
+        console.log('handleAdd ran');
+        console.log(this.state.addClick);
+        if (this.state.addClick === true){
+            console.log('handleAdd if ran');
+            return (
+                <Add />
+            )    
+        } else if (this.state.addClick === false){
+            console.log('handleAdd else if ran');
+            return <div></div>
+        }
+    }
+
+    handleAddClick = () => {
+        console.log('handleAddClick ran');
+        this.handleAdd();
+        this.setState({
+            addClick: true
+        });
+    }
+
+    isBackClick = () => {
+        if (this.context.backClick === true) {
+            this.context.handleRemoveBackClick();
+        }
+        this.setState({
+            addClick: false,
+            editClick: false
+        })
+
+        this.callToFunctions();
     }
 
     // NEED TO DO: 
@@ -35,7 +73,7 @@ export default class List extends Component {
     // edit buttons for prescription details,
     // Create a page for editing the prescription and handle the submit
 
-    createDate=(date_entered)=>{
+    createDate = (date_entered) => {
         let dateArr = date_entered.split('-');
         let date = [];
         date.push(dateArr[0])
@@ -49,13 +87,15 @@ export default class List extends Component {
         } else {
             date.push(dateArr[2])
         }
-        let fullDate = date.join('-');  
+        let fullDate = date.join('-');
 
         return fullDate
     }
 
     createListItems = (prescriptions) => {
-        return prescriptions.map((item, i) =>{
+        console.log('createListItems ran');
+        console.log(prescriptions);
+        return prescriptions.map((item, i) => {
             const { id, prescription_name, quantity, doctor, date_prescribed, date_to_refill, date_to_renew } = item;
 
             let datePrescribed = this.createDate(date_prescribed);
@@ -71,21 +111,43 @@ export default class List extends Component {
                     <p>Prescribed on: {datePrescribed}</p>
                     <p>Date to Refill: {dateRefill}</p>
                     <p>Date to Renew: {dateRenew}</p>
-                    <button>Edit</button>
+                    <button className="edit-button" onClick={this.handleEditClick}>Edit</button>
                 </li>
             )
         })
     }
 
+    renderList = () => {
+        console.log('renderList ran');
+        if (this.state.addClick === true || this.state.editClick === true) {
+            return (
+                <div></div>
+            )    
+        } else {
+            console.log('renderList else ran');
+            return (
+                <div>
+                    <ul>
+                        {this.createListItems(this.context.prescriptions)}
+                    </ul>
+                    <button className="Add-button" onClick={this.handleAddClick}>Add</button>
+                </div>
+            )
+        }   
+    }
+
+    callToFunctions = () => {
+        this.handleAdd();
+        this.handleEdit();
+    }
+
     render() {
-        console.log(this.context.prescriptions);
+        console.log(this.state);
         return (
             <div className="component-div">
                 <h2>Current Prescription List</h2>
-                <ul>
-                    {this.createListItems(this.context.prescriptions)}
-                </ul>
-                <br />
+                {this.renderList()}
+                {this.callToFunctions()}
             </div>
         )
     }
