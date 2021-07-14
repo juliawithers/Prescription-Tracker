@@ -27,6 +27,7 @@ export default class App extends Component {
       backClick: '',
       addClick: '',
       editClick: '',
+      scriptEdit: {},
       handleLoginSubmit: () => { },
       handleBackClick: () => { },
       handleRemoveBackClick: () => { },
@@ -45,7 +46,7 @@ export default class App extends Component {
 
     let length = STORE.users.length - 1;
     for (let i = 0; length; i++) {
-      let user = STORE.users[i];
+      let user = STORE.users[i]; 
       if (username === user.username && password === user.passw) {
         this.setState({
           user_id: user.user_id,
@@ -69,7 +70,6 @@ export default class App extends Component {
   }
 
   createLanding = () => {
-    console.log('createLanding ran');
     if (this.state.backClick === true) {
       console.log('createLanding backClick if ran')
       return (
@@ -162,11 +162,12 @@ export default class App extends Component {
     )
   }
 
-  handleEditClick = () => {
+  handleEditClick = (script) => {
     console.log('handleEditClick ran');
     // this.handleEdit();
     this.setState({
-        editClick: true
+        editClick: true,
+        scriptEdit: script
     });
   }
 
@@ -179,7 +180,6 @@ export default class App extends Component {
 
   handleBackClick = (input) => {
     console.log('handleBackClick ran');
-    console.log(context);
     this.setState({
       backClick: input,
       addClick: false,
@@ -207,6 +207,7 @@ export default class App extends Component {
       backClick: this.state.backClick,
       addClick: this.state.addClick,
       editClick: this.state.editClick,
+      scriptEdit: this.state.scriptEdit,
       handleLoginSubmit: this.handleLoginSubmit,
       handleBackClick: this.handleBackClick,
       handleRemoveBackClick: this.handleRemoveBackClick,
