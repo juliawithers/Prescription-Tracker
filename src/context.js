@@ -7,6 +7,7 @@ const context = React.createContext({
     backClick: '',
     addClick: '',
     editClick: '',
+    scriptEdit: {},
     handleLoginSubmit: () => { },
     handleBackClick: () => { },
     handleRemoveBackClick: () => {},

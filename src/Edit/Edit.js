@@ -17,8 +17,21 @@ export default class Add extends Component {
             doctorName: '',
             datePrescribed: '',
             dateToRefill: '',
-            dateToRenew: '',
+            dateToRenew: ''
         }
+    }
+
+    componentDidMount=()=>{
+        const script = this.context.scriptEdit;
+        this.setState({
+            id: script.id,
+            prescriptionName: script.prescription_name,
+            quantity: script.quantity,
+            doctorName: script.doctor,
+            datePrescribed: script.date_prescribed,
+            dateToRefill: script.date_to_refill,
+            dateToRenew: script.date_to_renew
+        })
     }
 
     updateInputs = (e) => {
@@ -59,12 +72,11 @@ export default class Add extends Component {
         });
     }
 
-    handleSubmitPrescription= () => {
-        // temporary script to handle id # of prescription
-        let newID = this.context.prescriptions.length +1;
+    handleSubmitPrescription= e => {
+        e.preventDefault();
 
         const scriptObj = {
-            id: newID,
+            id: this.state.id,
             prescription_name: this.state.prescriptionName,
             quantity: this.state.quantity,
             doctor: this.state.doctorName,
@@ -73,11 +85,11 @@ export default class Add extends Component {
             date_to_renew: this.state.dateToRenew 
         }
 
-        // temporary script to append to the context object
+        // temporary script to cut and insert the context object
         // may need to create an "order" to the prescriptions so we can insert at the correct point
         console.log(scriptObj);
-        this.context.prescriptions.push(scriptObj);
-        this.props.history.push('/')
+        this.context.prescriptions.splice(scriptObj.id-1,1,scriptObj);
+        this.props.history.push('/');
     }
 
     handleBack = () => {

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-// import { withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import context from '../context';
 
-export default class Add extends Component {
+class Add extends Component {
 
     static contextType = context;
     constructor(props) {
@@ -72,7 +72,7 @@ export default class Add extends Component {
         // temporary script to append to the context object
         console.log(scriptObj);
         this.context.prescriptions.push(scriptObj);
-        this.props.history.push('/')
+        this.props.history.push('/PrescriptionList');
     }
 
     handleBack = () => {
@@ -106,4 +106,4 @@ export default class Add extends Component {
     }
 }
 
-// export default withRouter(Add)
+export default withRouter(Add)
