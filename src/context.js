@@ -12,7 +12,6 @@ const context = React.createContext({
     handleBackClick: () => { },
     handleRemoveBackClick: () => {},
     handleAddClick: ()=>{},
-    handleAddClick: ()=>{},
     handleEditClick: ()=>{}
 })
 

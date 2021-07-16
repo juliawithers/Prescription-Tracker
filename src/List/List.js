@@ -2,25 +2,12 @@ import React, { Component } from 'react';
 import context from '../context';
 import Edit from '../Edit/Edit';
 import Add from '../Add/Add';
+// import { withRouter } from 'react-router-dom';
 
 export default class List extends Component {
 
     // validation code here
     static contextType = context;
-    constructor(props) {
-        super(props);
-        this.state = {
-            addClick: false,
-            editClick: false
-        };
-    }
-
-    componentDidMount () {
-        this.setState({
-            addClick: this.context.addClick,
-            editClick: this.context.editClick
-        })
-    }
 
     isBackClick = () => {
         if (this.context.backClick === true) {
@@ -35,19 +22,19 @@ export default class List extends Component {
     handleEdit = (e) => {
         // take the id and ind the data associated with this prescription to pass it to the edit component
         const id = Number(e.target.value);
-        let scriptEdit = this.context.prescriptions.find(element => 
-        {if (element.id === id) {
-            return {
-                "id": Number(element.id),
-                "prescription_name": element.prescription_name,
-                "quantity":element.quantity,
-                "doctor": element.doctor,
-                "date_prescribed": element.date_prescribed,
-                "date_to_refill": element.date_to_refill,
-                "date_to_renew": element.date_to_renew
+        let scriptEdit = this.context.prescriptions.find(element => {
+            if (element.id === id) {
+                return {
+                    "id": Number(element.id),
+                    "prescription_name": element.prescription_name,
+                    "quantity": element.quantity,
+                    "doctor": element.doctor,
+                    "date_prescribed": element.date_prescribed,
+                    "date_to_refill": element.date_to_refill,
+                    "date_to_renew": element.date_to_renew
+                }
             }
-        }
-    });
+        });
 
         console.log(scriptEdit);
         // pass the script to edit into Edit component using context in App component
@@ -55,8 +42,6 @@ export default class List extends Component {
     }
     // NEED TO DO: 
     // handle count downs by date based off of QTY of pills or whatever, 
-    // edit buttons for prescription details,
-    // Create a page for editing the prescription and handle the submit
 
     createDate = (date_entered) => {
         let dateArr = date_entered.split('-');
@@ -73,8 +58,7 @@ export default class List extends Component {
             date.push(dateArr[2])
         }
         let fullDate = date.join('-');
-
-        return fullDate
+        return fullDate;
     }
 
     createListItems = (prescriptions) => {
@@ -100,38 +84,41 @@ export default class List extends Component {
         })
     }
 
-    renderList = () => {
-        if (this.state.addClick === true || this.state.editClick === true) {
-            return (
-                <div></div>
-            )    
-        } else {
-            return (
-                <div>
-                    <h2>Current Prescription List</h2>
-                    <ul>
-                        {this.createListItems(this.context.prescriptions)}
-                    </ul>
-                    <button className="Add-button" onClick={this.handleAdd}>Add</button>
-                </div>
-            )
-        }   
+    renderList() {
+        console.log('renderList ran');
+        return (
+            <div>
+                <h2>Current Prescription List</h2>
+                <ul>
+                    {this.createListItems(this.context.prescriptions)}
+                </ul>
+                <button className="Add-button" onClick={this.handleAdd}>Add</button>
+            </div>
+        )
     }
 
 
     render() {
-        console.log(this.state);
+        // console.log(this.context);
         return (
             <div className="component-div">
-                {this.context.addClick === false && this.context.editClick === false
-                ? this.renderList()
-                : <div></div>}
+                {/* {this.context.addClick === false && this.context.editClick === false
+                    ? this.renderList()
+                    : <div></div>}
                 {this.context.addClick === true
-                ? <Add />
-                : <div></div>}
+                    ? <Add />
+                    : <div></div>}
                 {this.context.editClick === true
-                ? <Edit />
-                : <div></div>}
+                    ? <Edit />
+                    : <div></div>} */}
+
+                {this.context.addClick === false && this.context.editClick === false
+                    ? this.renderList()
+                    : (this.context.addClick === true
+                        ? <Add />
+                        : (this.context.editClick === true
+                            ? <Edit />
+                            :<div></div>))}
             </div>
         )
     }

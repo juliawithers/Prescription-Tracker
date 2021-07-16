@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 // import { withRouter } from 'react-router-dom';
 import context from '../context';
 
-export default class Add extends Component {
+export default class Edit extends Component {
 
     // need to pass the information to this component
     // need to create that in List
-
 
     static contextType = context;
     constructor(props) {
         super(props);
         this.state = {
+            id: '',
             prescriptionName: '',
             quantity: '',
             doctorName: '',
@@ -21,7 +21,7 @@ export default class Add extends Component {
         }
     }
 
-    componentDidMount=()=>{
+    componentDidMount = () => {
         const script = this.context.scriptEdit;
         this.setState({
             id: script.id,
@@ -31,7 +31,7 @@ export default class Add extends Component {
             datePrescribed: script.date_prescribed,
             dateToRefill: script.date_to_refill,
             dateToRenew: script.date_to_renew
-        })
+        });
     }
 
     updateInputs = (e) => {
@@ -89,7 +89,7 @@ export default class Add extends Component {
         // may need to create an "order" to the prescriptions so we can insert at the correct point
         console.log(scriptObj);
         this.context.prescriptions.splice(scriptObj.id-1,1,scriptObj);
-        this.props.history.push('/');
+        this.handleBack();
     }
 
     handleBack = () => {
@@ -99,7 +99,6 @@ export default class Add extends Component {
 
 
     render() {
-        console.log(this.context.scriptEdit);
         return (
             <div>
                 <h2>Edit Prescription</h2>

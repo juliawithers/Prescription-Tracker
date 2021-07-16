@@ -30,7 +30,6 @@ export default class Login extends Component {
     }
 
     handleSubmit = e => {
-        console.log(this.state);
         e.preventDefault();
         this.context.handleLoginSubmit(this.state.username, this.state.password);
     }

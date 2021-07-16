@@ -3,6 +3,7 @@ import { Route, Link, NavLink, withRouter } from 'react-router-dom';
 import context from './context';
 // import config from './config';
 import STORE from './STORE';
+import HandleLanding from './HandleLanding/HandleLanding';
 import Login from './Login/Login';
 import List from './List/List';
 import PrescriptionDetails from './PrescriptionDetails/PrescriptionDetails';
@@ -13,7 +14,7 @@ import xOut from './pictures/x_out.png';
 import './App.css';
 
 
-export default class App extends Component {
+class App extends Component {
 
   static contextType = context;
   constructor(props) {
@@ -31,9 +32,8 @@ export default class App extends Component {
       handleLoginSubmit: () => { },
       handleBackClick: () => { },
       handleRemoveBackClick: () => { },
-      handleAddClick: ()=>{},
-      handleAddClick: ()=>{},
-      handleEditClick: ()=>{}
+      handleAddClick: () => { },
+      handleEditClick: () => { }
     }
   }
 
@@ -46,7 +46,7 @@ export default class App extends Component {
 
     let length = STORE.users.length - 1;
     for (let i = 0; length; i++) {
-      let user = STORE.users[i]; 
+      let user = STORE.users[i];
       if (username === user.username && password === user.passw) {
         this.setState({
           user_id: user.user_id,
@@ -69,20 +69,21 @@ export default class App extends Component {
     }
   }
 
-  createLanding = () => {
+  createLanding() {
+    console.log('createLanding ran');
     if (this.state.backClick === true) {
-      console.log('createLanding backClick if ran')
+      console.log('createLanding backclick true ran');
       return (
         <List />
       )
     }
     if (this.state.login === false) {
-      console.log('createLanding if Login ran');
+      console.log('createLanding login false ran');
       return (
         <Login />
       )
     } else if (this.state.login === true) {
-      console.log('createLanding else if ran');
+      console.log('createLanding login true ran');
       return (
         <List />
       )
@@ -92,6 +93,16 @@ export default class App extends Component {
   createMainRoutes() {
     return (
       <>
+        <Route
+          exact
+          path="/"
+          component={HandleLanding}
+        />
+        <Route
+          exact
+          path="/Login"
+          component={Login}
+        />
         <Route
           exact
           path="/PrescriptionList"
@@ -164,18 +175,17 @@ export default class App extends Component {
 
   handleEditClick = (script) => {
     console.log('handleEditClick ran');
-    // this.handleEdit();
     this.setState({
-        editClick: true,
-        scriptEdit: script
+      editClick: true,
+      scriptEdit: script
     });
   }
 
   handleAddClick = () => {
-      console.log('handleAddClick ran');
-      this.setState({
-          addClick: true
-      });
+    console.log('handleAddClick ran');
+    this.setState({
+      addClick: true
+    });
   }
 
   handleBackClick = (input) => {
@@ -185,7 +195,6 @@ export default class App extends Component {
       addClick: false,
       editClick: false
     });
-    this.createLanding();
   }
 
   handleRemoveBackClick = () => {
@@ -193,13 +202,11 @@ export default class App extends Component {
       backClick: false,
       addClick: false,
       editClick: false
-
     });
   }
 
   render() {
     console.log(this.state);
-    // let status = this.createLanding();
     const contextValue = {
       user_id: this.state.user_id,
       prescriptions: this.state.prescriptions,
@@ -238,14 +245,13 @@ export default class App extends Component {
             {bigMenu}
           </nav>
           <main>
-            {/* {status} */}
             {this.createMainRoutes()}
-            {this.state.login === false
-            ? <Login />
-            : <List/>}
+            {/* {this.createLanding()} */}
           </main>
         </div>
       </context.Provider>
     )
   }
 }
+
+export default withRouter(App)
